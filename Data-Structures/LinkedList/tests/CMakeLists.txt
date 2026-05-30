@@ -10,7 +10,7 @@
 
 include(GoogleTest)
 
-set(NUM_TEST_SUITES 8)
+set(NUM_TEST_SUITES 9)
 
 foreach(i RANGE 1 ${NUM_TEST_SUITES})
     if(i LESS 10)
