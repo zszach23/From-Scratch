@@ -1,7 +1,7 @@
 // ============================================================================
 // LinkedList: testsuite_08.cpp
 //
-// Test Suite for LinkedList PeekFront()
+// Test Suite for LinkedList PeekBack()
 // ============================================================================
 
 #include "LinkedList.hpp"
