@@ -11,7 +11,7 @@ class TreeNode
 {
     // Declare AVLTree as friend class so that AVL tree can update private members
     // Introduces coupling between AVLTree and TreeNode
-    template <typename T> friend class AVLTree;
+    template <typename AnyType> friend class AVLTree;
 
 public:
 
@@ -21,26 +21,8 @@ public:
     /// @brief Construct a TreeNode with item and left/right child = null
     TreeNode(AnyType item);
 
-    /// @brief  Construct a TreeNode with item and left/right child
-    /// @param item 
-    /// @param leftChild 
-    /// @param rightChild 
-    TreeNode(AnyType item, TreeNode* leftChild, TreeNode* rightChild, int height);
-
     /// @brief Deconstruct the TreeNode
     ~TreeNode();
-
-    /// @brief Get item stored in TreeNode
-    /// @return 
-    AnyType GetItem();
-
-    /// @brief Get left child of TreeNode
-    /// @return 
-    TreeNode* GetLeftChild();
-
-    /// @brief Get right child of TreeNode
-    /// @return 
-    TreeNode* GetRightChild();
 
     /// @brief Get height of TreeNode
     /// @return

@@ -19,32 +19,8 @@ TreeNode<AnyType>::TreeNode(AnyType item)
 }
 
 template <typename AnyType>
-TreeNode<AnyType>::TreeNode(AnyType item, TreeNode* leftChild, TreeNode* rightChild, int height)
-    : item(item), leftChild(leftChild), rightChild(rightChild), height(height)
-{
-}
-
-template <typename AnyType>
 TreeNode<AnyType>::~TreeNode()
 {
-}
-
-template <typename AnyType>
-AnyType TreeNode<AnyType>::GetItem()
-{
-    return this->item;
-}
-
-template <typename AnyType>
-TreeNode<AnyType>* TreeNode<AnyType>::GetLeftChild()
-{
-    return this->leftChild;
-}
-
-template <typename AnyType>
-TreeNode<AnyType>* TreeNode<AnyType>::GetRightChild()
-{
-    return this->rightChild;
 }
 
 template <typename AnyType>

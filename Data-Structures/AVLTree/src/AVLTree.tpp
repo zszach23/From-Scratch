@@ -37,11 +37,11 @@ TreeNode<AnyType>* AVLTree<AnyType>::DestroyTree(TreeNode<AnyType>* root)
     if (root == nullptr)
         return nullptr;
 
-    if (root->GetLeftChild() == nullptr)
-        DestroyTree(root->GetLeftChild());
+    if (root->leftChild == nullptr)
+        DestroyTree(root->leftChild);
 
-    if (root->GetRightChild() == nullptr)
-        DestroyTree(root->GetRightChild());
+    if (root->rightChild == nullptr)
+        DestroyTree(root->rightChild);
 
     return nullptr;
 }
@@ -61,9 +61,9 @@ void AVLTree<AnyType>::InOrder(TreeNode<AnyType>* root, std::vector<AnyType>& re
     if (root == nullptr)
         return;
 
-    AVLTree<AnyType>::InOrder(root->GetLeftChild(), resultList);
-    resultList.push_back(root->GetItem());
-    AVLTree<AnyType>::InOrder(root->GetRightChild(), resultList);
+    AVLTree<AnyType>::InOrder(root->leftChild, resultList);
+    resultList.push_back(root->item);
+    AVLTree<AnyType>::InOrder(root->rightChild, resultList);
 }
 
 template <typename AnyType>
@@ -79,13 +79,13 @@ TreeNode<AnyType>* AVLTree<AnyType>::AddItem(TreeNode<AnyType>* root, AnyType it
         return new TreeNode<AnyType>(item);
 
     // Do not allow duplicates
-    if (root->GetItem() == item)
+    if (root->item == item)
         return root;
 
-    if (item < root->GetItem())
-        root->leftChild = AddItem(root->GetLeftChild(), item);
+    if (item < root->item)
+        root->leftChild = AddItem(root->leftChild, item);
     else
-        root->rightChild = AddItem(root->GetRightChild(), item);
+        root->rightChild = AddItem(root->rightChild, item);
 
     root->height = 1 + GetMaxSubtreeHeight(root);
 
@@ -105,9 +105,9 @@ bool AVLTree<AnyType>::ContainsItem(AnyType item)
             return true;
 
         if (item < currNode->item)
-            currNode = currNode->GetLeftChild();
+            currNode = currNode->leftChild;
         else
-            currNode = currNode->GetRightChild();
+            currNode = currNode->rightChild;
     }
 
     return false;
@@ -125,16 +125,16 @@ TreeNode<AnyType>* AVLTree<AnyType>::DeleteItem(TreeNode<AnyType>* root, AnyType
     if (root == nullptr)
         return nullptr;
 
-    if (item < root->GetItem())
-        root->leftChild = DeleteItem(root->GetLeftChild(), item);
+    if (item < root->item)
+        root->leftChild = DeleteItem(root->leftChild, item);
 
-    if (item > root->GetItem())
-        root->rightChild = DeleteItem(root->GetRightChild(), item);
+    if (item > root->item)
+        root->rightChild = DeleteItem(root->rightChild, item);
 
-    if (item == root->GetItem())
+    if (item == root->item)
     {
         // Case 1: root has no children
-        if (root->GetLeftChild() == nullptr && root->GetRightChild() == nullptr)
+        if (root->leftChild == nullptr && root->rightChild == nullptr)
         {
             delete root;
             return nullptr;
@@ -142,25 +142,25 @@ TreeNode<AnyType>* AVLTree<AnyType>::DeleteItem(TreeNode<AnyType>* root, AnyType
 
         // Case 2: root has only left child
         // Move left child up to root
-        else if (root->GetLeftChild() != nullptr && root->GetRightChild() == nullptr)
+        else if (root->leftChild != nullptr && root->rightChild == nullptr)
         {
-            AnyType leftChildItem = root->GetLeftChild()->GetItem();
+            AnyType leftChildItem = root->leftChild->item;
 
             root->item = leftChildItem;
 
-            delete root->GetLeftChild();
+            delete root->leftChild;
             root->leftChild = nullptr;
         }
 
         // Case 3: root has only right child
         // Move right child up to root
-        else if (root->GetLeftChild() == nullptr && root->GetRightChild() != nullptr)
+        else if (root->leftChild == nullptr && root->rightChild != nullptr)
         {
-            AnyType rightChildItem = root->GetRightChild()->GetItem();
+            AnyType rightChildItem = root->rightChild->item;
 
             root->item = rightChildItem;
 
-            delete root->GetRightChild();
+            delete root->rightChild;
             root->rightChild = nullptr;
         }
 
@@ -168,11 +168,11 @@ TreeNode<AnyType>* AVLTree<AnyType>::DeleteItem(TreeNode<AnyType>* root, AnyType
         // Replace with max value in left subtree
         else
         {
-            AnyType maxItem = FindMax(root->GetLeftChild());
+            AnyType maxItem = FindMax(root->leftChild);
 
             root->item = maxItem;
 
-            root->leftChild = DeleteItem(root->GetLeftChild(), maxItem);
+            root->leftChild = DeleteItem(root->leftChild, maxItem);
         }
 
         root->height = 1 + GetMaxSubtreeHeight(root);
@@ -193,8 +193,8 @@ TreeNode<AnyType>* AVLTree<AnyType>::Balance(TreeNode<AnyType>* root)
     if (balanceFactor == UNBALANCED_LEFT)
     {
         // Double rotation if root is left heavy and left child is right heavy
-        if (root->GetLeftChild()->GetBalanceFactor() == HEAVY_RIGHT)
-            root->leftChild = RotateLeft(root->GetLeftChild());
+        if (root->leftChild->GetBalanceFactor() == HEAVY_RIGHT)
+            root->leftChild = RotateLeft(root->leftChild);
 
         root = RotateRight(root);
     }
@@ -202,8 +202,8 @@ TreeNode<AnyType>* AVLTree<AnyType>::Balance(TreeNode<AnyType>* root)
     if (balanceFactor == UNBALANCED_RIGHT)
     {
         // Double rotation if root is right heavy and right child is left heavy
-        if (root->GetRightChild()->GetBalanceFactor() == HEAVY_LEFT)
-            root->rightChild = RotateRight(root->GetRightChild());
+        if (root->rightChild->GetBalanceFactor() == HEAVY_LEFT)
+            root->rightChild = RotateRight(root->rightChild);
         
         root = RotateLeft(root);
     }
@@ -214,9 +214,9 @@ TreeNode<AnyType>* AVLTree<AnyType>::Balance(TreeNode<AnyType>* root)
 template <typename AnyType>
 TreeNode<AnyType>* AVLTree<AnyType>::RotateLeft(TreeNode<AnyType>* root)
 {
-    TreeNode<AnyType>* newRoot = root->GetRightChild();
+    TreeNode<AnyType>* newRoot = root->rightChild;
 
-    root->rightChild = newRoot->GetLeftChild();
+    root->rightChild = newRoot->leftChild;
 
     newRoot->leftChild = root;
 
@@ -229,9 +229,9 @@ TreeNode<AnyType>* AVLTree<AnyType>::RotateLeft(TreeNode<AnyType>* root)
 template <typename AnyType>
 TreeNode<AnyType>* AVLTree<AnyType>::RotateRight(TreeNode<AnyType>* root)
 {
-    TreeNode<AnyType>* newRoot = root->GetLeftChild();
+    TreeNode<AnyType>* newRoot = root->leftChild;
 
-    root->leftChild = newRoot->GetRightChild();
+    root->leftChild = newRoot->rightChild;
 
     newRoot->rightChild = root;
 
@@ -256,10 +256,10 @@ AnyType AVLTree<AnyType>::FindMax(TreeNode<AnyType>* root)
     if (root == nullptr)
         return AnyType();
 
-    if (root->GetRightChild() == nullptr)
-        return root->GetItem();
+    if (root->rightChild == nullptr)
+        return root->item;
 
-    return FindMax(root->GetRightChild());
+    return FindMax(root->rightChild);
 }
 
 template <typename AnyType>
