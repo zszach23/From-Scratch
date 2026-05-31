@@ -11,7 +11,7 @@ class TreeNode
 {
     // Declare AVLTree as friend class so that AVL tree can update private members
     // Introduces coupling between AVLTree and TreeNode
-    template <typename AnyType> friend class AVLTree;
+    template <typename T> friend class AVLTree;
 
 public:
 
